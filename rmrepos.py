@@ -28,6 +28,8 @@ signin_btn.click()
 
 file = open('reposlist.txt', 'r')
 for repo in file:
+    if repo.startswith('#'):
+        continue
     fullname = repo.strip()
     driver.get(f'https://github.com/{fullname}/settings')
 
