@@ -1,1 +1,1 @@
-hazemessam/rm-git-repos-automation
+username/repo-name
