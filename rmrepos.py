@@ -1,7 +1,7 @@
 from selenium import webdriver
 from time import sleep
-from dotenv import load_dotenv
-from os import getenv
+# from dotenv import load_dotenv
+# from os import getenv
 from getpass import getpass
 from os import system
 
@@ -33,13 +33,14 @@ for repo in file:
     fullname = repo.strip()
     driver.get(f'https://github.com/{fullname}/settings')
 
-    del_link = driver.find_element_by_xpath('//*[@id="options_bucket"]/div[8]/ul/li[4]/details/summary')
+    del_link = driver.find_element_by_xpath('//*[@id="options_bucket"]/div[9]/ul/li[4]/details/summary')
+                                            
     del_link.click()
 
-    reponame_inp = driver.find_element_by_xpath('//*[@id="options_bucket"]/div[8]/ul/li[4]/details/details-dialog/div[3]/form/p/input')
+    reponame_inp = driver.find_element_by_xpath('//*[@id="options_bucket"]/div[9]/ul/li[4]/details/details-dialog/div[3]/form/p/input')
     reponame_inp.send_keys(fullname)
     sleep(1)
-    del_btn = driver.find_element_by_xpath('//*[@id="options_bucket"]/div[8]/ul/li[4]/details/details-dialog/div[3]/form/button')
+    del_btn = driver.find_element_by_xpath('//*[@id="options_bucket"]/div[9]/ul/li[4]/details/details-dialog/div[3]/form/button')
     del_btn.click()
 
 driver.close()
