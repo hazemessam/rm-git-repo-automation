@@ -1,17 +1,15 @@
 from selenium import webdriver
 from time import sleep
-# from dotenv import load_dotenv
-# from os import getenv
 from getpass import getpass
-from os import system
+from os import system, remove
+from sys import exit
 
 
-# load_dotenv()
-# username =  getenv('gitusername')
-# password =  getenv('gitpassword')
+open('targetrepos.txt', 'w').close()
+system('targetrepos.txt')
 
-username = input('Username: ')
-password = getpass('Password: ')
+username = input('> Username: ')
+password = getpass('> Password: ')
 
 # option = webdriver.ChromeOptions()
 # option.add_argument('headless')
@@ -26,24 +24,42 @@ password_imp.send_keys(password)
 signin_btn = driver.find_element_by_xpath('//*[@id="login"]/form/div[4]/input[9]')
 signin_btn.click()
 
-file = open('reposlist.txt', 'r')
-for repo in file:
-    if repo.startswith('#'):
-        continue
-    fullname = repo.strip()
-    driver.get(f'https://github.com/{fullname}/settings')
+file = None
+try:
+    file = open('targetrepos.txt', 'r')
+except:
+    print("Can't open reposlist.txt!")
+    file.close()
+    exit()
 
-    del_link = driver.find_element_by_xpath('//*[@id="options_bucket"]/div[9]/ul/li[4]/details/summary')
-                                            
-    del_link.click()
+success = True
+try:   
+    for repo in file:
+        if repo.startswith('#'):
+            continue
+        fullname = repo.strip()
+        driver.get(f'https://github.com/{fullname}/settings')
 
-    reponame_inp = driver.find_element_by_xpath('//*[@id="options_bucket"]/div[9]/ul/li[4]/details/details-dialog/div[3]/form/p/input')
-    reponame_inp.send_keys(fullname)
-    sleep(1)
-    del_btn = driver.find_element_by_xpath('//*[@id="options_bucket"]/div[9]/ul/li[4]/details/details-dialog/div[3]/form/button')
-    del_btn.click()
+        del_link = driver.find_element_by_xpath('//*[@id="options_bucket"]/div[9]/ul/li[4]/details/summary')
+                                                
+        del_link.click()
 
-driver.close()
-print('All done!')
-sleep(2)
-system('exit')
+        reponame_inp = driver.find_element_by_xpath('//*[@id="options_bucket"]/div[9]/ul/li[4]/details/details-dialog/div[3]/form/p/input')
+        reponame_inp.send_keys(fullname)
+        sleep(1)
+        del_btn = driver.find_element_by_xpath('//*[@id="options_bucket"]/div[9]/ul/li[4]/details/details-dialog/div[3]/form/button')
+        del_btn.click()
+        sleep(1)
+except Exception as e:
+    print(e)
+    success = False
+finally:
+    file.close()
+    remove('targetrepos.txt')
+    remove('reposlist.txt')
+    
+if success:
+    print('All done!')
+    sleep(2)
+    driver.close()
+

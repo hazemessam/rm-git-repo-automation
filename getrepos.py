@@ -1,15 +1,23 @@
 from github import Github
-from dotenv import load_dotenv
-from os import getenv
+from getpass import getpass
+from os import remove, system
 
-load_dotenv()
-username =  getenv('gitusername')
-password =  getenv('gitpassword')
+username = input('> Username: ')
+password = getpass('> Password: ')
 
-file = open('reposlist.txt', 'a')
+file = open('reposlist.txt', 'w')
 
-gitCon = Github(username, password)
-gitUser = gitCon.get_user()
-gitRepos = gitUser.get_repos()
-for repo in gitRepos:
-    file.write(f'{repo.full_name}\n')
+try:    
+    gitCon = Github(username, password)
+    gitUser = gitCon.get_user()
+    gitRepos = gitUser.get_repos()
+    for repo in gitRepos:
+        file.write(f'{repo.full_name}\n')
+    file.close()
+    system('reposlist.txt')
+except Exception as e:
+    print(e)
+    file.close()
+    remove('reposlist.txt')
+    
+
